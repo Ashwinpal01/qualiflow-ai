@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Sales Qualification Agent</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Toast Notification Container -->
+        <div id="toast-container" class="toast-container"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <div class="logo-container" id="app-logo">
+                    <div class="logo-emblem-wrapper">
+                        <div class="logo-glow-ring"></div>
+                        <div class="logo-icon">
+                            <svg class="logo-svg" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16 2L20.5 7.5L28 9L25.5 16L28 23L20.5 24.5L16 30L11.5 24.5L4 23L6.5 16L4 9L11.5 7.5L16 2Z" fill="url(#logo-grad-outer)" opacity="0.25"/>
+                                <circle cx="16" cy="16" r="11" fill="url(#logo-grad-inner)"/>
+                                <circle cx="16" cy="16" r="11" stroke="rgba(255,255,255,0.4)" stroke-width="1.2" stroke-dasharray="3 2" class="rotating-ring"/>
+                                <path d="M11 13.5C11 12.6716 11.6716 12 12.5 12H19.5C20.3284 12 21 12.6716 21 13.5V17.5C21 18.3284 20.3284 19 19.5 19H12.5C11.6716 19 11 18.3284 11 17.5V13.5Z" fill="rgba(255,255,255,0.2)"/>
+                                <circle cx="13.5" cy="15.5" r="1.5" fill="#FFFFFF"/>
+                                <circle cx="18.5" cy="15.5" r="1.5" fill="#FFFFFF"/>
+                                <path d="M14 17.5C14.5 18.2 17.5 18.2 18 17.5" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>
+                                <path d="M16 6V9" stroke="#6EE7B7" stroke-width="2" stroke-linecap="round"/>
+                                <circle cx="16" cy="5" r="1.5" fill="#6EE7B7"/>
+                                <defs>
+                                    <linearGradient id="logo-grad-outer" x1="4" y1="2" x2="28" y2="30" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#0D9488"/>
+                                        <stop offset="1" stop-color="#3B82F6"/>
+                                    </linearGradient>
+                                    <linearGradient id="logo-grad-inner" x1="5" y1="5" x2="27" y2="27" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#14B8A6"/>
+                                        <stop offset="0.5" stop-color="#0D9488"/>
+                                        <stop offset="1" stop-color="#0F766E"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <span class="logo-status-pulse" title="AI Core Online"></span>
+                    </div>
+                    <div class="logo-brand-info">
+                        <div class="logo-title-row">
+                            <span class="logo-brand-name">Sales<span class="logo-accent">AI</span></span>
+                            <span class="logo-version-badge">PRO</span>
+                        </div>
+                        <span class="logo-subtext">QUALIFICATION AGENT</span>
+                    </div>
+                </div>
+                
+                <nav class="sidebar-nav">
+                    <a href="#" class="nav-item active" data-view="dashboard">
+                        <i class="ph ph-house"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#" class="nav-item" data-view="leads">
+                        <i class="ph ph-users"></i>
+                        <span>Leads</span>
+                    </a>
+                    <a href="#" class="nav-item" data-view="agent-runs">
+                        <i class="ph ph-play-circle"></i>
+                        <span>Agent Runs</span>
+                    </a>
+                    <a href="#" class="nav-item" data-view="services">
+                        <i class="ph ph-briefcase"></i>
+                        <span>Services</span>
+                    </a>
+                    <a href="#" class="nav-item" data-view="settings">
+                        <i class="ph ph-gear"></i>
+                        <span>Settings</span>
+                    </a>
+                </nav>
+            </div>
+            
+            <div class="sidebar-bottom">
+                <div class="user-profile-wrapper">
+                    <div class="user-profile" id="user-profile-menu-btn">
+                        <div class="avatar">AD</div>
+                        <div class="user-info">
+                            <span class="user-name">Alex Davis</span>
+                            <span class="user-role">Admin</span>
+                        </div>
+                        <i class="ph ph-caret-down"></i>
+                    </div>
+                    <div class="dropdown-menu user-dropdown" id="user-dropdown-menu">
+                        <a href="#" data-view="settings" class="dropdown-item">
+                            <i class="ph ph-user"></i> Account Settings
+                        </a>
+                        <a href="#" id="menu-connect-db" class="dropdown-item">
+                            <i class="ph ph-database"></i> Connect Database
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <div style="padding: 0.25rem 0.75rem; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Theme Mode</div>
+                        <button class="dropdown-item theme-option-btn active" data-theme-mode="system">
+                            <i class="ph ph-desktop"></i> System Default
+                        </button>
+                        <button class="dropdown-item theme-option-btn" data-theme-mode="light">
+                            <i class="ph ph-sun"></i> Light Mode
+                        </button>
+                        <button class="dropdown-item theme-option-btn" data-theme-mode="dark">
+                            <i class="ph ph-moon"></i> Dark Mode
+                        </button>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" id="menu-clear-leads" class="dropdown-item danger">
+                            <i class="ph ph-trash"></i> Reset All Leads
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="header-titles">
+                    <h1 id="page-title">AI Sales Qualification Agent</h1>
+                    <p id="page-subtitle">Qualify leads, match services, and generate personalized outreach.</p>
+                </div>
+
+                <div class="header-actions">
+                    <!-- Enhanced Light/Dark Theme Switcher Controls -->
+                    <div class="theme-control-wrapper">
+                        <div class="theme-segmented-control" id="theme-segmented-control" role="radiogroup" aria-label="Theme mode switcher">
+                            <div class="theme-slider-thumb" id="theme-slider-thumb"></div>
+                            <button class="theme-segment-btn" data-theme-mode="light" title="Light Mode (Alt + T)">
+                                <i class="ph-bold ph-sun"></i>
+                                <span>Light</span>
+                            </button>
+                            <button class="theme-segment-btn" data-theme-mode="dark" title="Dark Mode (Alt + T)">
+                                <i class="ph-bold ph-moon"></i>
+                                <span>Dark</span>
+                            </button>
+                            <button class="theme-segment-btn" data-theme-mode="system" title="System Theme (Alt + T)">
+                                <i class="ph-bold ph-desktop"></i>
+                                <span>Auto</span>
+                            </button>
+                        </div>
+                        
+                        <button class="quick-theme-toggle-btn" id="quick-theme-toggle-btn" title="Quick Switch Theme Mode (Alt + T)">
+                            <div class="quick-theme-icon-container">
+                                <i class="ph-fill ph-sun icon-sun"></i>
+                                <i class="ph-fill ph-moon icon-moon"></i>
+                                <i class="ph-bold ph-desktop icon-system"></i>
+                            </div>
+                        </button>
+                    </div>
+
+                    <button class="btn-secondary" id="header-connect-db-btn">
+                        <i class="ph ph-database"></i>
+                        <span>Connect Database</span>
+                    </button>
+
+                    <div class="dropdown-wrapper">
+                        <button class="date-picker-btn" id="date-picker-btn">
+                            <i class="ph ph-calendar-blank"></i>
+                            <span id="selected-date-text">All Time</span>
+                            <i class="ph ph-caret-down"></i>
+                        </button>
+                        <div class="dropdown-menu date-dropdown" id="date-dropdown-menu">
+                            <button class="dropdown-item" data-range="today">Today</button>
+                            <button class="dropdown-item" data-range="7days">Last 7 Days</button>
+                            <button class="dropdown-item" data-range="30days">Last 30 Days</button>
+                            <button class="dropdown-item active" data-range="all">All Time</button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- VIEW 1: DASHBOARD -->
+            <div id="view-dashboard" class="view-content active">
+                <!-- KPIs Grid -->
+                <div class="kpi-grid">
+                    <div class="card kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-icon-container icon-teal">
+                                <i class="ph ph-users"></i>
+                            </div>
+                            <div class="kpi-info">
+                                <span class="kpi-label">Total Leads</span>
+                                <span class="kpi-value" id="kpi-total-leads">0</span>
+                                <div class="kpi-trend" id="kpi-total-trend">
+                                    <span class="trend-text" style="color: var(--text-muted);">No data yet</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-icon-container icon-green">
+                                <i class="ph ph-check-circle"></i>
+                            </div>
+                            <div class="kpi-info">
+                                <span class="kpi-label">Qualified Leads</span>
+                                <span class="kpi-value" id="kpi-qualified-leads">0</span>
+                                <div class="kpi-trend" id="kpi-qualified-trend">
+                                    <span class="trend-text" style="color: var(--text-muted);">No data yet</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-icon-container icon-teal">
+                                <i class="ph ph-trend-up"></i>
+                            </div>
+                            <div class="kpi-info">
+                                <span class="kpi-label">Avg Score</span>
+                                <span class="kpi-value" id="kpi-avg-score">0</span>
+                                <div class="kpi-trend" id="kpi-avg-trend">
+                                    <span class="trend-text" style="color: var(--text-muted);">No data yet</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-icon-container icon-blue">
+                                <i class="ph ph-clock"></i>
+                            </div>
+                            <div class="kpi-info">
+                                <span class="kpi-label">Pending Review</span>
+                                <span class="kpi-value" id="kpi-pending-review">0</span>
+                                <div class="kpi-trend" id="kpi-pending-trend">
+                                    <span class="trend-text" style="color: var(--text-muted);">No data yet</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-grid">
+                    <!-- Left Column -->
+                    <div class="left-col">
+                        <!-- Run Agent on Connected Lead Card -->
+                        <div class="card mb-4" style="margin-bottom: 1.25rem;">
+                            <div class="flex-between">
+                                <h2 class="card-title" style="font-size: 1.05rem;"><i class="ph ph-database" style="color: var(--primary-color);"></i> Run Agent on Connected Lead</h2>
+                                <button class="btn-secondary btn-sm" id="dashboard-open-db-btn">
+                                    <i class="ph ph-plug"></i> Connect DB
+                                </button>
+                            </div>
+                            <p style="color: var(--text-muted); font-size: 0.825rem; margin-top: 0.25rem; margin-bottom: 1rem;">
+                                Select any inbound or imported lead from your connected databases to run the AI qualification agent.
+                            </p>
+                            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                                <div class="select-wrapper" style="flex: 1;">
+                                    <select id="dashboard-lead-select">
+                                        <option value="">Loading leads from connected DB...</option>
+                                    </select>
+                                    <i class="ph ph-caret-down"></i>
+                                </div>
+                                <button class="btn-primary" id="run-selected-lead-btn" style="white-space: nowrap;">
+                                    <i class="ph ph-play"></i> Run Agent
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- New Lead Card -->
+                        <div class="card">
+                            <h2 class="card-title">New Lead</h2>
+                            <form class="lead-form" id="lead-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="name">Name <span>*</span></label>
+                                        <input type="text" id="name" required placeholder="e.g. Jordan Lee">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="company">Company <span>*</span></label>
+                                        <input type="text" id="company" required placeholder="e.g. Acme Corp">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="email">Email <span>*</span></label>
+                                        <input type="email" id="email" required placeholder="e.g. jordan.lee@acme.com">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="industry">Industry</label>
+                                        <div class="select-wrapper">
+                                            <select id="industry">
+                                                <option value="" disabled selected>Select Industry</option>
+                                                <option value="Technology">Technology</option>
+                                                <option value="Healthcare">Healthcare</option>
+                                                <option value="Finance">Finance &amp; Banking</option>
+                                                <option value="Retail">E-Commerce &amp; Retail</option>
+                                                <option value="Services">Professional Services</option>
+                                            </select>
+                                            <i class="ph ph-caret-down"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="budget">Budget</label>
+                                        <div class="select-wrapper">
+                                            <select id="budget">
+                                                <option value="" disabled selected>Select Budget</option>
+                                                <option value="15000">$10,000 - $25,000</option>
+                                                <option value="35000">$25,000 - $50,000</option>
+                                                <option value="75000">$50,000 - $100,000</option>
+                                                <option value="150000">$100,000+</option>
+                                            </select>
+                                            <i class="ph ph-caret-down"></i>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="timeline">Timeline</label>
+                                        <div class="select-wrapper">
+                                            <select id="timeline">
+                                                <option value="" disabled selected>Select Timeline</option>
+                                                <option value="Immediate">Immediate (&lt; 1 month)</option>
+                                                <option value="1-3 months">1-3 months</option>
+                                                <option value="3-6 months">3-6 months</option>
+                                                <option value="Flexible">Flexible</option>
+                                            </select>
+                                            <i class="ph ph-caret-down"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="company_size">Company Size</label>
+                                        <div class="select-wrapper">
+                                            <select id="company_size">
+                                                <option value="" disabled selected>Select Company Size</option>
+                                                <option value="10">1-10 employees</option>
+                                                <option value="50">11-50 employees</option>
+                                                <option value="150">51-200 employees</option>
+                                                <option value="500">201-500 employees</option>
+                                                <option value="1000">500+ employees</option>
+                                            </select>
+                                            <i class="ph ph-caret-down"></i>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="source">Source</label>
+                                        <div class="select-wrapper">
+                                            <select id="source">
+                                                <option value="Website" selected>Website Form</option>
+                                                <option value="Inbound Call">Inbound Call</option>
+                                                <option value="LinkedIn">LinkedIn Campaign</option>
+                                                <option value="PostgreSQL DB">PostgreSQL DB</option>
+                                                <option value="Salesforce">Salesforce CRM</option>
+                                            </select>
+                                            <i class="ph ph-caret-down"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" style="width: 100%;">
+                                    <label for="problem">Problem / Business Challenge <span>*</span></label>
+                                    <textarea id="problem" required rows="2" placeholder="Describe the business challenge..."></textarea>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn-primary" id="create-lead-btn">
+                                        <i class="ph ph-sparkle"></i>
+                                        <span>Create &amp; Process Lead</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Generated Email Draft Card -->
+                        <div class="card email-draft-card">
+                            <div class="card-header-flex">
+                                <h2 class="card-title">Generated Email Draft</h2>
+                                <button class="btn-outline" id="copy-email-btn">
+                                    <i class="ph ph-copy"></i>
+                                    <span>Copy Email</span>
+                                </button>
+                            </div>
+                            <hr class="divider">
+                            <div class="email-content">
+                                <p class="email-subject" id="email-subject-display">
+                                    <strong>Subject:</strong> <span id="subject-text">--</span>
+                                </p>
+                                <div class="email-body" id="email-body-display">
+                                    <p style="color: var(--text-muted); font-style: italic;">No email draft generated yet. Fill out the form or select a lead to generate outreach.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="right-col">
+                        <!-- Agent Result Card -->
+                        <div class="card">
+                            <h2 class="card-title">Agent Result</h2>
+                            <div class="result-list">
+                                <div class="result-item">
+                                    <div class="result-label">
+                                        <i class="ph ph-target" style="color: #0F766E;"></i>
+                                        <span>Lead Score</span>
+                                    </div>
+                                    <div class="result-value score-value" id="display-lead-score">--</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-label">
+                                        <i class="ph ph-star" style="color: #0F766E;"></i>
+                                        <span>Qualification</span>
+                                    </div>
+                                    <div class="result-value">
+                                        <span class="badge" id="display-qualification" style="background: var(--primary-light); color: var(--text-muted); border: 1px solid var(--border-color);">No Lead Selected</span>
+                                    </div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-label">
+                                        <i class="ph ph-brain" style="color: #0F766E;"></i>
+                                        <span>Detected Intent</span>
+                                    </div>
+                                    <div class="result-value" id="display-intent" style="color: var(--text-muted);">--</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-label">
+                                        <i class="ph ph-briefcase" style="color: #0F766E;"></i>
+                                        <span>Matched Service</span>
+                                    </div>
+                                    <div class="result-value" id="display-service" style="color: var(--text-muted);">--</div>
+                                </div>
+                                <div class="result-item">
+                                    <div class="result-label">
+                                        <i class="ph ph-paper-plane-right" style="color: #0F766E;"></i>
+                                        <span>Recommended Action</span>
+                                    </div>
+                                    <div class="result-value" id="display-action" style="color: var(--text-muted);">No active lead evaluated yet.</div>
+                                </div>
+                            </div>
+
+                            <!-- Review & Decision Action Bar for Needs Review Leads -->
+                            <div id="review-decision-bar" class="card-action-bar hidden" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--border-color);">
+                                <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Review &amp; Decision Workflow</div>
+                                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                    <button class="btn-primary btn-sm" id="btn-approve-lead" style="flex: 1; background: var(--success-color); border-color: var(--success-color);">
+                                        <i class="ph ph-check-circle"></i> Approve &amp; Qualify
+                                    </button>
+                                    <button class="btn-outline btn-sm" id="btn-request-info" style="flex: 1;">
+                                        <i class="ph ph-envelope-simple"></i> Request Details
+                                    </button>
+                                    <button class="btn-danger btn-sm" id="btn-disqualify-lead">
+                                        <i class="ph ph-x-circle"></i> Disqualify
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Agent Activity Card -->
+                        <div class="card">
+                            <h2 class="card-title">Agent Activity Feed</h2>
+                            <div class="activity-list" id="activity-list-container">
+                                <div style="color: var(--text-muted); font-size: 0.85rem; padding: 1.5rem 0; text-align: center;">
+                                    <i class="ph ph-clock-counter-clockwise" style="font-size: 1.8rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>
+                                    <span>No agent activities logged yet. Create a lead or run agent to start.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 2: LEADS MANAGEMENT -->
+            <div id="view-leads" class="view-content">
+                <div class="card toolbar-card">
+                    <div class="toolbar-left">
+                        <div class="search-box">
+                            <i class="ph ph-magnifying-glass"></i>
+                            <input type="text" id="leads-search-input" placeholder="Search by name, company, email, or intent...">
+                        </div>
+                        <div class="select-wrapper">
+                            <select id="leads-status-filter">
+                                <option value="all">All Statuses</option>
+                                <option value="Qualified">Qualified</option>
+                                <option value="Needs Review">Needs Review</option>
+                                <option value="Disqualified">Disqualified</option>
+                                <option value="new">New (Unprocessed)</option>
+                            </select>
+                            <i class="ph ph-caret-down"></i>
+                        </div>
+                    </div>
+
+                    <div class="toolbar-right">
+                        <button class="btn-outline" id="refresh-data-btn">
+                            <i class="ph ph-arrows-clockwise"></i>
+                            <span>Refresh</span>
+                        </button>
+                        <button class="btn-primary" id="open-db-modal-from-leads">
+                            <i class="ph ph-database"></i>
+                            <span>Import Database</span>
+                        </button>
+                        <button class="btn-danger" id="clear-data-btn">
+                            <i class="ph ph-trash"></i>
+                            <span>Clear Leads</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="leads-grid-container" id="leads-list">
+                    <!-- Dynamic Leads Cards / Table rendered here -->
+                </div>
+            </div>
+
+            <!-- VIEW 3: AGENT RUNS -->
+            <div id="view-agent-runs" class="view-content">
+                <div class="card">
+                    <h2 class="card-title">Agent Execution History</h2>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Run ID</th>
+                                    <th>Lead Name</th>
+                                    <th>Company</th>
+                                    <th>Intent Classification</th>
+                                    <th>Lead Score</th>
+                                    <th>Matched Service</th>
+                                    <th>Email Draft</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="agent-runs-table-body">
+                                <!-- Dynamic Agent Runs rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 4: SERVICES CATALOG -->
+            <div id="view-services" class="view-content">
+                <div class="services-header-box card" style="margin-bottom: 1.5rem;">
+                    <div class="flex-between" style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h2 style="font-size: 1.3rem; font-weight: 800;"><i class="ph ph-briefcase" style="color: var(--primary-color);"></i> Services Catalog &amp; Matching Intelligence</h2>
+                            <p style="color: var(--text-muted); font-size: 0.875rem; margin-top: 0.25rem;">Official AI services knowledge base matched dynamically by the sales qualification agent.</p>
+                        </div>
+                        <span class="badge badge-success" style="padding: 0.4rem 0.85rem; font-size: 0.8rem; border-radius: 20px;">
+                            <i class="ph ph-check-circle"></i> 6 Real Services Active
+                        </span>
+                    </div>
+                </div>
+
+                <div class="services-grid" id="services-catalog-grid">
+                    <!-- Loaded dynamically from /api/agent/services -->
+                </div>
+            </div>
+
+            <!-- VIEW 5: SETTINGS & DATABASES -->
+            <div id="view-settings" class="view-content">
+                <div class="settings-grid" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <!-- Connected Databases Management -->
+                    <div class="card settings-section" style="grid-column: 1 / -1;">
+                        <div class="section-header-flex">
+                            <div>
+                                <h2 class="card-title">Connected Databases &amp; External Integrations</h2>
+                                <p class="section-desc">Manage connected databases, connection protocols, and live sync schedules.</p>
+                            </div>
+                            <button class="btn-primary" id="settings-add-db-btn">
+                                <i class="ph ph-plus"></i> Connect New DB
+                            </button>
+                        </div>
+                        
+                        <div class="connected-db-list" id="connected-databases-container" style="margin-top: 1rem;">
+                            <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+                                <i class="ph ph-database" style="font-size: 2.2rem; display: block; margin-bottom: 0.5rem; opacity: 0.35;"></i>
+                                <p style="font-size: 0.9rem; font-weight: 500;">No external databases or integrations connected yet.</p>
+                                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Click 'Connect New DB' above to sync PostgreSQL, Salesforce, HubSpot, or custom databases.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Theme & Appearance Settings Card -->
+                    <div class="card settings-section" style="grid-column: 1 / -1;">
+                        <h2 class="card-title">Theme &amp; Appearance</h2>
+                        <p class="section-desc mb-3">Choose your preferred application theme mode. <strong>System Default</strong> dynamically matches your device/OS preferences automatically.</p>
+                        
+                        <div class="theme-selector-grid">
+                            <div class="theme-card active theme-option-btn" data-theme-mode="system">
+                                <div class="theme-icon-wrapper"><i class="ph ph-desktop"></i></div>
+                                <div class="theme-card-info">
+                                    <div class="theme-card-title">System Default (Recommended)</div>
+                                    <div class="theme-card-sub">Syncs automatically with OS light/dark theme</div>
+                                </div>
+                            </div>
+                            <div class="theme-card theme-option-btn" data-theme-mode="light">
+                                <div class="theme-icon-wrapper"><i class="ph ph-sun"></i></div>
+                                <div class="theme-card-info">
+                                    <div class="theme-card-title">Light Mode</div>
+                                    <div class="theme-card-sub">Bright background and crisp UI elements</div>
+                                </div>
+                            </div>
+                            <div class="theme-card theme-option-btn" data-theme-mode="dark">
+                                <div class="theme-icon-wrapper"><i class="ph ph-moon"></i></div>
+                                <div class="theme-card-info">
+                                    <div class="theme-card-title">Dark Mode</div>
+                                    <div class="theme-card-sub">Sleek dark theme optimized for low light</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL 1: MULTI-MODE DATABASE INTEGRATION MODAL -->
+    <div class="modal-overlay" id="db-modal-overlay">
+        <div class="modal-card modal-large">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <i class="ph ph-database modal-header-icon"></i>
+                    <div>
+                        <h2>Connect External Database &amp; Import Leads</h2>
+                        <p>Configure multi-protocol database connectivity to sync leads directly into your AI agent.</p>
+                    </div>
+                </div>
+                <button class="modal-close" id="close-db-modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Provider Selector -->
+                <div class="form-group mb-4">
+                    <label>Database / Platform Provider</label>
+                    <div class="provider-grid" id="db-provider-selector">
+                        <div class="provider-card active" data-provider="PostgreSQL">
+                            <i class="ph ph-database"></i>
+                            <span>PostgreSQL</span>
+                        </div>
+                        <div class="provider-card" data-provider="Salesforce">
+                            <i class="ph ph-cloud"></i>
+                            <span>Salesforce</span>
+                        </div>
+                        <div class="provider-card" data-provider="HubSpot">
+                            <i class="ph ph-chart-line-up"></i>
+                            <span>HubSpot</span>
+                        </div>
+                        <div class="provider-card" data-provider="MySQL">
+                            <i class="ph ph-table"></i>
+                            <span>MySQL</span>
+                        </div>
+                        <div class="provider-card" data-provider="Notion">
+                            <i class="ph ph-notebook"></i>
+                            <span>Notion</span>
+                        </div>
+                        <div class="provider-card" data-provider="Snowflake">
+                            <i class="ph ph-snowflake"></i>
+                            <span>Snowflake</span>
+                        </div>
+                        <div class="provider-card" data-provider="MongoDB">
+                            <i class="ph ph-brackets-curly"></i>
+                            <span>MongoDB</span>
+                        </div>
+                        <div class="provider-card" data-provider="Supabase">
+                            <i class="ph ph-lightning"></i>
+                            <span>Supabase</span>
+                        </div>
+                        <div class="provider-card" data-provider="Google Sheets">
+                            <i class="ph ph-file-spreadsheet"></i>
+                            <span>Google Sheets</span>
+                        </div>
+                        <div class="provider-card" data-provider="CSV File">
+                            <i class="ph ph-file-csv"></i>
+                            <span>CSV / File Upload</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Connection Method Tabs -->
+                <div class="tab-nav mb-3">
+                    <button class="tab-btn active" data-tab="tab-conn-string">Connection String</button>
+                    <button class="tab-btn" data-tab="tab-host-port">Host &amp; Port</button>
+                    <button class="tab-btn" data-tab="tab-api-key">API Key &amp; Token</button>
+                    <button class="tab-btn" data-tab="tab-file-upload">CSV / File Import</button>
+                    <button class="tab-btn" data-tab="tab-webhook">REST Webhook Sync</button>
+                </div>
+
+                <!-- TAB 1: Connection String -->
+                <div class="tab-panel active" id="tab-conn-string">
+                    <div class="form-group">
+                        <label for="db-conn-string">Connection String / Database URI <span>*</span></label>
+                        <input type="text" id="db-conn-string" placeholder="postgresql://username:password@localhost:5432/sales_db" value="postgresql://admin:secret@pg-cluster.internal:5432/crm_production">
+                        <span class="help-text">Supports PostgreSQL, MySQL, SQLite, MongoDB URI strings.</span>
+                    </div>
+                </div>
+
+                <!-- TAB 2: Host & Port -->
+                <div class="tab-panel" id="tab-host-port">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="db-host">Host / IP Address</label>
+                            <input type="text" id="db-host" placeholder="db.example.com or 192.168.1.100" value="postgres.internal.cloud">
+                        </div>
+                        <div class="form-group">
+                            <label for="db-port">Port</label>
+                            <input type="number" id="db-port" placeholder="5432" value="5432">
+                        </div>
+                    </div>
+                    <div class="form-row mt-2">
+                        <div class="form-group">
+                            <label for="db-name-input">Database Name</label>
+                            <input type="text" id="db-name-input" placeholder="sales_crm" value="sales_crm">
+                        </div>
+                        <div class="form-group">
+                            <label for="db-user">Username</label>
+                            <input type="text" id="db-user" placeholder="db_user" value="sales_admin">
+                        </div>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label for="db-pass">Password</label>
+                        <input type="password" id="db-pass" placeholder="••••••••" value="SuperSecretPass123">
+                    </div>
+                </div>
+
+                <!-- TAB 3: API Key & Token -->
+                <div class="tab-panel" id="tab-api-key">
+                    <div class="form-group">
+                        <label for="db-api-token">API Token / OAuth Key <span>*</span></label>
+                        <input type="text" id="db-api-token" placeholder="pat_1234567890abcdef..." value="sf_token_live_998877665544332211">
+                    </div>
+                    <div class="form-group mt-2">
+                        <label for="db-endpoint-url">API Base Endpoint / Instance URL</label>
+                        <input type="text" id="db-endpoint-url" placeholder="https://yourinstance.salesforce.com/services/data/v54.0" value="https://acme.my.salesforce.com">
+                    </div>
+                </div>
+
+                <!-- TAB 4: CSV / File Import -->
+                <div class="tab-panel" id="tab-file-upload">
+                    <div class="file-dropzone" id="file-dropzone">
+                        <i class="ph ph-cloud-arrow-up"></i>
+                        <p>Drag &amp; Drop CSV or JSON lead file here, or <label for="csv-file-input" class="link-label">browse file</label></p>
+                        <input type="file" id="csv-file-input" accept=".csv,.json" style="display: none;">
+                        <span class="file-name-display" id="file-name-display">No file selected</span>
+                    </div>
+                </div>
+
+                <!-- TAB 5: REST Webhook Sync -->
+                <div class="tab-panel" id="tab-webhook">
+                    <div class="form-group">
+                        <label for="db-webhook-url">Webhook Ingestion Endpoint URL</label>
+                        <input type="text" id="db-webhook-url" placeholder="https://api.yourdomain.com/webhooks/leads" value="https://api.salesai.io/v1/incoming-leads">
+                    </div>
+                    <div class="form-group mt-2">
+                        <label for="db-webhook-secret">Bearer Secret Token (Optional)</label>
+                        <input type="password" id="db-webhook-secret" placeholder="whsec_..." value="whsec_987654321">
+                    </div>
+                </div>
+
+                <!-- Test Connection Status Box -->
+                <div class="connection-status-box hidden" id="connection-status-box">
+                    <div class="status-indicator icon-success" id="status-icon">
+                        <i class="ph ph-check-circle"></i>
+                    </div>
+                    <div class="status-details">
+                        <span class="status-title" id="status-title">Connection Successful</span>
+                        <span class="status-sub" id="status-sub">Ping: 42ms | Database Version: PostgreSQL v15.4</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-outline" id="test-db-btn">
+                    <i class="ph ph-lightning"></i> Test Connection
+                </button>
+                <button class="btn-primary" id="save-db-btn">
+                    <i class="ph ph-plug"></i> Connect &amp; Import Leads
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: LEAD RESULT / AGENT DETAILS MODAL -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div>
+                    <h2><span id="modal-lead-name">Lead</span> <span id="modal-lead-company" style="color: var(--text-muted); font-size: 1rem;"></span></h2>
+                    <p>Complete AI qualification breakdown &amp; outreach email.</p>
+                </div>
+                <button class="modal-close" id="close-modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="result-list mb-4">
+                    <div class="result-item">
+                        <div class="result-label"><i class="ph ph-target" style="color:#0F766E"></i> Score</div>
+                        <div class="result-value score-value" id="modal-lead-score">92</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label"><i class="ph ph-star" style="color:#0F766E"></i> Qualification</div>
+                        <div class="result-value"><span class="badge badge-success" id="modal-qualification">Qualified</span></div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label"><i class="ph ph-brain" style="color:#0F766E"></i> Intent</div>
+                        <div class="result-value" id="modal-intent">AI Sales Agent</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label"><i class="ph ph-briefcase" style="color:#0F766E"></i> Matched Service</div>
+                        <div class="result-value" id="modal-service">AI Sales Qualification Agent</div>
+                    </div>
+                </div>
+
+                <div class="card p-3">
+                    <div class="flex-between mb-2">
+                        <h4 style="font-size: 0.9rem;">Email Subject:</h4>
+                        <button class="btn-outline btn-sm" id="modal-copy-subject"><i class="ph ph-copy"></i> Copy</button>
+                    </div>
+                    <p class="mb-3" id="modal-email-subject" style="font-weight: 600; color: var(--primary-color);"></p>
+
+                    <div class="flex-between mb-2">
+                        <h4 style="font-size: 0.9rem;">Generated Email Draft:</h4>
+                        <button class="btn-outline btn-sm" id="modal-copy-body"><i class="ph ph-copy"></i> Copy Body</button>
+                    </div>
+                    <div id="modal-email-body" class="p-3 glass-panel" style="font-size: 0.875rem; white-space: pre-wrap; line-height: 1.6;"></div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-outline" id="modal-close-bottom">Close</button>
+                <button class="btn-primary" id="modal-copy-all"><i class="ph ph-copy"></i> Copy All Outreach</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: CONFIRMATION MODAL -->
+    <div class="modal-overlay" id="confirm-modal-overlay">
+        <div class="modal-card modal-sm">
+            <div class="modal-header">
+                <h3>Confirm Action</h3>
+                <button class="modal-close" id="close-confirm-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-modal-message">Are you sure you want to perform this action?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline" id="confirm-cancel-btn">Cancel</button>
+                <button class="btn-danger" id="confirm-ok-btn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

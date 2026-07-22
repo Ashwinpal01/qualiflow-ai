@@ -1,0 +1,74 @@
+{
+    "ai_sales_agent": {
+        "service_name": "AI Sales Qualification Agent",
+        "description": "A custom AI sales assistant that qualifies incoming leads, assigns lead scores, identifies customer intent, recommends next actions, drafts personalized follow-up emails, and updates CRM records.",
+        "currency": "USD",
+        "starting_price": 7500,
+        "estimated_price_range": {
+            "minimum": 7500,
+            "maximum": 18000
+        },
+        "delivery_time": "6 to 10 weeks",
+        "next_step": "Book a discovery call to review the sales process, lead sources, qualification rules, CRM platform, and required integrations."
+    },
+    "customer_support_automation": {
+        "service_name": "AI Customer Support Automation",
+        "description": "An AI-powered support system that answers common customer questions, classifies support requests, searches an approved knowledge base, escalates complex cases, and records support activity.",
+        "currency": "USD",
+        "starting_price": 6000,
+        "estimated_price_range": {
+            "minimum": 6000,
+            "maximum": 15000
+        },
+        "delivery_time": "5 to 9 weeks",
+        "next_step": "Review support channels, ticket volume, knowledge sources, escalation policies, and integration requirements."
+    },
+    "rag_document_chatbot": {
+        "service_name": "RAG Document Chatbot",
+        "description": "A document question-answering application that processes company files, creates semantic embeddings, retrieves relevant passages, generates grounded answers, and provides source references.",
+        "currency": "USD",
+        "starting_price": 4000,
+        "estimated_price_range": {
+            "minimum": 4000,
+            "maximum": 10000
+        },
+        "delivery_time": "4 to 7 weeks",
+        "next_step": "Review document formats, document volume, access permissions, expected users, security requirements, and target deployment environment."
+    },
+    "workflow_automation": {
+        "service_name": "AI Workflow Automation",
+        "description": "A custom automation system that coordinates repetitive business tasks, approvals, notifications, data transfers, LLM decisions, and integrations with external applications.",
+        "currency": "USD",
+        "starting_price": 6500,
+        "estimated_price_range": {
+            "minimum": 6500,
+            "maximum": 20000
+        },
+        "delivery_time": "6 to 12 weeks",
+        "next_step": "Map the existing workflow, identify manual bottlenecks, define approval rules, and review the systems that must be integrated."
+    },
+    "data_extraction": {
+        "service_name": "AI Document Data Extraction",
+        "description": "An AI document-processing solution that extracts structured fields from invoices, receipts, forms, contracts, and other business documents, validates results, and exports data to approved systems.",
+        "currency": "USD",
+        "starting_price": 5000,
+        "estimated_price_range": {
+            "minimum": 5000,
+            "maximum": 14000
+        },
+        "delivery_time": "5 to 9 weeks",
+        "next_step": "Review representative documents, required output fields, expected document volume, validation rules, and destination systems."
+    },
+    "other": {
+        "service_name": "Custom AI Solution",
+        "description": "A custom AI application designed after evaluating the client's business problem, available data, security requirements, integrations, deployment environment, and success criteria.",
+        "currency": "USD",
+        "starting_price": 3500,
+        "estimated_price_range": {
+            "minimum": 3500,
+            "maximum": 25000
+        },
+        "delivery_time": "Determined after technical discovery",
+        "next_step": "Schedule a discovery call to define requirements, scope, risks, integrations, deliverables, and a realistic implementation estimate."
+    }
+}

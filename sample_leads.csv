@@ -1,0 +1,6 @@
+name,email,company,industry,company_size,budget,timeline,problem,source
+"Liam Vance","liam.vance@quantumtech.io","QuantumTech Dynamics","Technology",150,50000,"1-3 months","Struggling with manual lead qualification. Need automated AI scoring to route high priority enterprise leads to our sales reps.","CSV Import"
+"Sophia Martinez","sophia@healthpulse.org","HealthPulse Global","Healthcare",500,75000,"Immediate","Require AI agents to classify medical provider inbound inquiries and draft personalized response emails.","CSV Import"
+"Ethan Wright","ethan.w@nexusfinance.com","Nexus Capital","Finance",250,100000,"1-3 months","Looking to score multi-channel incoming leads and connect qualified leads directly into sales workflows.","CSV Import"
+"Olivia Chen","olivia@apexretail.co","Apex E-Commerce","Retail",80,25000,"Flexible","Inbound contact forms need automatic intent discovery and service package matching.","CSV Import"
+"Noah Sterling","noah@agilelogistics.com","Agile Logistics Group","Services",350,60000,"3-6 months","High volume lead triage system needed to auto-qualify prospects and reduce response latency.","CSV Import"
