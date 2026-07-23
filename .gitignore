@@ -1,27 +1,39 @@
-# Environment variables (NEVER COMMIT SECRETS)
+# Environment variables and secrets
 .env
-.env.local
-*.env
+.env.*
+!.env.example
 
-# Python Virtual Environments
+# Python virtual environments
 .venv/
 venv/
-ENV/
 env/
+ENV/
 
-# Python Cache & Bytecode
+# Python cache and test files
 __pycache__/
 *.py[cod]
 *$py.class
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
-# SQLite & Data files
+# Local databases
 *.db
+*.sqlite
 *.sqlite3
-data/*.db
 
-# IDE & OS files
+# Logs
+*.log
+
+# IDE settings
 .vscode/
 .idea/
+
+# Operating-system files
 .DS_Store
 Thumbs.db
+
+# Python build files
+build/
+dist/
+*.egg-info/
