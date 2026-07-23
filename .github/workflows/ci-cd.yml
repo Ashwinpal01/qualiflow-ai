@@ -1,41 +1,57 @@
-name: CI/CD Pipeline - SalesAI Agent
+name: QualiFlow AI CI/CD
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches:
+      - main
+
   pull_request:
-    branches: [ "main", "master" ]
+    branches:
+      - main
+
+  workflow_dispatch:
 
 jobs:
   test:
-    name: Run Tests & Quality Checks
+    name: Run Tests
     runs-on: ubuntu-latest
+
+    env:
+      PYTHONPATH: .
+      DATABASE_URL: sqlite:///./data/test_sales_agent.db
+      OPENROUTER_API_KEY: test-key
+      OPENROUTER_MODEL: openrouter/free
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Set Up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: "pip"
 
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          if [ -d "tests" ]; then pip install pytest; fi
+          python -m pip install -r requirements.txt
+          python -m pip install pytest
 
       - name: Run Tests
-        env:
-            PYTHONPATH: ${{ github.workspace }}
         run: |
-               python -m pytest -v
+          python -m pytest -v
 
-  build-and-push-docker:
-    name: Build & Push Docker Image to GHCR
+  build-and-push:
+    name: Build and Push Docker Image
     needs: test
+
+    if: |
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main'
+
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+
     permissions:
       contents: read
       packages: write
@@ -44,32 +60,38 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Log in to GitHub Container Registry (GHCR)
+      - name: Prepare Lowercase Image Name
+        id: image
+        shell: bash
+        run: |
+          echo "name=${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+
+      - name: Set Up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log In to GHCR
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract Docker Metadata
-        id: meta
+      - name: Generate Docker Metadata
+        id: metadata
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository }}
+          images: ghcr.io/${{ steps.image.outputs.name }}
           tags: |
             type=raw,value=latest
-            type=sha,format=short
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+            type=sha,prefix=sha-
 
       - name: Build and Push Docker Image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
+          file: ./Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
